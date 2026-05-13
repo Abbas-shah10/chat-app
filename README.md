@@ -1,5 +1,5 @@
 # 💬 Chat App
-## <a name="introduction">Introductionch</a>
+## <a name="introduction">Introductionc</a>
 
 A chat app platform that lets users to chat and send messages with each other and also user/admin can create groups chat and add new users to group's chats. Built with latest React and Tailwind with Material UI and much more.
 
