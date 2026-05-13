@@ -1,4 +1,37 @@
 # 💬 Chat App
+## <a name="introduction">Introductionch</a>
+
+A chat app platform that lets users to chat and send messages with each other and also user/admin can create groups chat and add new users to group's chats. Built with latest React and Tailwind with Material UI and much more.
+
+## <a name="tech-stack">⚙️ Tech Stack</a>
+
+- React 19
+- MongoDb
+- TailwindCSS
+- Material UI
+- Tailwind 
+
+## <a name="features">🔋 Features</a>
+
+👉 **User Authentication with MongoDb**: Implement signup, login, and logout functionality using MongoDb authentication system.
+
+👉 **Searching Users**: Implement search where user can search other users and start chat.
+
+👉 **Creating Group Chats**: Implement group chat where admin/user can create, delete group chats.
+
+👉 **Profile View**: user can view thier profile username, email and avatar.
+
+
+
+
+
+
+
+
+
+
+
+
 
 <div align="center">
 
