@@ -1,10 +1,11 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, } from "react";
 import ChatContext from "../context/ChatContext"
 import { Box, IconButton, Typography } from "@mui/material";
 import { FaArrowLeft } from "react-icons/fa";
 import ProfileModal from "./ProfileModal";
+import UpdateGroupChatModal from "./UpdateGroupChatModal";
 
-const SingleChat = () => {
+const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     const { selectedChat, user, setSelectedChat } = useContext(ChatContext);
 
 
@@ -36,32 +37,25 @@ const SingleChat = () => {
                         sx={{
                             display: "flex",
                             alignItems: "center",
-                            gap: 1,
-
-                            px: {
-                                xs: 1,
-                                sm: 2,
-                            },
-
+                            justifyContent: "space-between",
+                            px: { xs: 1, sm: 2 },
                             py: 1.5,
-
                             borderBottom: "1px solid #e0e0e0",
                             backgroundColor: "#fff",
+                            width: "100%",
                         }}
                     >
                         {/* MOBILE BACK BUTTON */}
                         <IconButton
                             sx={{
-                                display: {
-                                    xs: "flex",
-                                    md: "none",
-                                },
+                                display: { xs: "flex", md: "none" },
                             }}
                             onClick={() => setSelectedChat("")}
                         >
                             <FaArrowLeft size={20} />
                         </IconButton>
 
+                        {/* Chat name */}
                         <Typography
                             sx={{
                                 fontSize: {
@@ -69,26 +63,26 @@ const SingleChat = () => {
                                     sm: "1.2rem",
                                     md: "1.5rem",
                                 },
-
                                 fontWeight: 600,
                                 fontFamily: "Work Sans",
-
-                                whiteSpace: "nowrap",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
+                                flexGrow: 1,   // take available space
+                                ml: 1,
                             }}
                         >
-                            {!selectedChat.isGroupChat ? (
-                                <>
-                                    {getSender(user, selectedChat.users)}
-                                    <ProfileModal user={getSenderFull(user, selectedChat.users)} />
-                                </>
-                            ) : (
-                                <>
-                                    {selectedChat.chatName.toUpperCase()}
-                                </>
-                            )}
+                            {!selectedChat.isGroupChat
+                                ? getSender(user, selectedChat.users)
+                                : selectedChat.chatName.toUpperCase()}
                         </Typography>
+
+                        {/* Eye/Edit icon at far right */}
+                        {!selectedChat.isGroupChat ? (
+                            <ProfileModal user={getSenderFull(user, selectedChat.users)} />
+                        ) : (
+                            <UpdateGroupChatModal
+                                fetchAgain={fetchAgain}
+                                setFetchAgain={setFetchAgain}
+                            />
+                        )}
                     </Box>
 
                     {/* CHAT AREA */}

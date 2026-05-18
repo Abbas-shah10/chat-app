@@ -83,6 +83,7 @@ const createGroupChat = asyncHandler(async (req, res) => {
       .populate("users", "-password")
       .populate("groupAdmin", "-password");
     res.status(200).json(fullGroupChat);
+    console.log(fullGroupChat);
   } catch (e) {
     throw new Error("Failed to create group chat");
   }
