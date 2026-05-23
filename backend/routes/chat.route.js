@@ -16,7 +16,7 @@ router.route("/").post(authorized, accessChat);
 router.route("/").get(authorized, fetchChats);
 router.route("/group").post(authorized, createGroupChat);
 router.route("/rename").patch(authorized, renameGroup);
-router.route("/group-add").patch(authorized, addToGroup);
+router.route("/group-add").post(authorized, addToGroup);
 router.route("/group-remove").patch(authorized, removeFromGroup);
 
 export default router;

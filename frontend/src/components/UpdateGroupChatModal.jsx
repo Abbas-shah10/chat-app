@@ -5,7 +5,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Modal from '@mui/material/Modal';
 import { FaEye, FaTimes, } from "react-icons/fa";
 import ChatContext from '../context/ChatContext';
-import { Chip, DialogContent, IconButton, TextField } from '@mui/material';
+import { Chip, IconButton, List, ListItemButton, ListItemText, TextField } from '@mui/material';
+import { toast } from 'react-toastify'
+import axios from 'axios'
 
 const style = {
     position: 'absolute',
@@ -23,16 +25,91 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [groupChatName, setGroupChatName] = React.useState('')
+    const [renameLoading, setRenameLoading] = React.useState(false)
+    const [search, setSearch] = React.useState("")
+    const [searchResult, setSearchResult] = React.useState([]);
+    const [loading, setLoading] = React.useState(false)
 
     const { selectedChat, setSelectedChat, user } = React.useContext(ChatContext)
 
 
-    const handleRemove = (id) => {
-        setSelectedChat(selectedChat.users.filter((u) => u._id !== id))
+
+    const handleRemove = (userId) => {
+        setSelectedChat({ ...selectedChat, users: selectedChat.users?.filter((u) => u._id !== userId) })
     }
 
-    const handleRename = () => { }
-    const handleSearch = () => { }
+    const handleAddUser = async (user1) => {
+        if (selectedChat.users.find(u => u._id === user1._id)) {
+            toast.success("User already in group")
+        }
+        if (selectedChat.groupAdmin._id !== user._id) {
+            toast.success("Only admins can add users")
+        }
+
+        try {
+            setLoading(true)
+
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${user.token}`
+                }
+            }
+
+            const { data } = await axios.post(`/api/v1/group-add`, {
+                chatId: selectedChat._id,
+                userId: user1._id
+            }, config)
+            setSelectedChat(data)
+            setFetchAgain(!fetchAgain)
+            setLoading(false)
+        } catch (error) {
+            toast.error('Error adding user', error)
+        }
+    }
+
+    const handleRename = async () => {
+        if (!groupChatName) return;
+        try {
+            setRenameLoading(true)
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${user.token}`
+                }
+            }
+            const { data } = await axios.patch(`/api/v1/chats/rename`, {
+                chatId: selectedChat._id,
+                chatName: groupChatName,
+            }, config)
+            setSelectedChat(data);
+            setFetchAgain(!fetchAgain)
+            setRenameLoading(false)
+            toast.success("Chat group name updated SuccessfullY")
+        } catch (error) {
+            toast.error("Error renaming group chat name", error)
+            setRenameLoading(false)
+        }
+    }
+    const handleSearch = async (query) => {
+        if (!query) {
+            return
+        }
+        const config = {
+            headers: {
+                Authorization: `Bearer ${user.token}`
+            }
+        }
+
+        try {
+            setLoading(true)
+            const { data } = await axios.get(`/api/v1/users?search=${search}`, config)
+            console.log(data)
+            setSearchResult(data)
+        } catch (error) {
+            toast.error("Error to load search users", error)
+        } finally {
+            setLoading(false)
+        }
+    }
 
 
     return (
@@ -86,12 +163,48 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
                         </Box>
                         <TextField label="Add user to group"
                             variant="outlined"
-                            sx={{ mt: 2 }}
-                            value={groupChatName}
+                            sx={{ mt: 2, display: 'block' }}
                             onChange={(e) => handleSearch(e.target.value)} />
+                        {/* <span className="loader"></span> */}
+                        {loading ? (<span className="loader"></span>) : (
+                            <List sx={{ maxHeight: 320, padding: 1 }}>
+                                {searchResult.map((user) => (
+                                    <ListItemButton
+                                        key={user._id}
+                                        onClick={() => handleAddUser(user)}
+                                        sx={{
+                                            borderRadius: 3,
+                                            mb: 0.5,
+                                            "&:hover": {
+                                                bgcolor: "#f0f7ff",
+                                            },
+                                        }}
+                                    >
+                                        <Box
+                                            sx={{
+                                                width: 42,
+                                                height: 42,
+                                                borderRadius: "50%",
+                                                bgcolor: "#1976d2",
+                                                color: "#fff",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                fontWeight: "bold",
+                                                mr: 2,
+                                                textTransform: "uppercase",
+                                            }}
+                                        >
+                                            {user.name?.charAt(0)}
+                                        </Box>
 
-                        <Button sx={{ marginTop: '4px' }} variant='contained' color='red' onClick={() => handleRemove(user)}>Leave Group</Button>
+                                        <ListItemText primary={user.name} secondary={user.email} />
+                                    </ListItemButton>
+                                ))}
+                            </List>
+                        )}
                     </Box>
+                    <Button sx={{ marginTop: '4px', float: 'right' }} variant='contained' color='red' onClick={() => handleRemove(user)}>Leave Group</Button>
                 </Box>
 
 

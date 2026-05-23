@@ -38,7 +38,7 @@ const ProfileModal = ({ user, children }) => {
             >
                 <Box sx={{ ...style, display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <Typography id="modal-modal-title" variant="h2" component="h2" sx={{ mb: 2, fontSize: "1.5rem" }}>
-                        {user.name}
+                        {user?.name}
                     </Typography>
                     {/* <img src={user?.pic} alt={user.name} style={{ width: "100%" }} /> */}
                     <p className="text-[1.25rem]">Email: {user?.email}</p>
