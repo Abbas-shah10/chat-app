@@ -55,7 +55,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
                 }
             }
 
-            const { data } = await axios.post(`/api/v1/group-add`, {
+            const { data } = await axios.post(`/api/v1/chats/group-add`, {
                 chatId: selectedChat._id,
                 userId: user1._id
             }, config)
