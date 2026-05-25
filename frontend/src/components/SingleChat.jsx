@@ -1,11 +1,17 @@
-import { useContext, } from "react";
+import { useContext, useEffect, useState, } from "react";
 import ChatContext from "../context/ChatContext"
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, TextField, IconButton, Typography } from "@mui/material";
 import { FaArrowLeft } from "react-icons/fa";
 import ProfileModal from "./ProfileModal";
 import UpdateGroupChatModal from "./UpdateGroupChatModal";
+import axios from "axios";
+import { toast } from "react-toastify";
+import ScrollableChat from "./ScrollableChat";
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
+    const [messages, setMessages] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [newMessage, setNewMessage] = useState("")
     const { selectedChat, user, setSelectedChat } = useContext(ChatContext);
 
 
@@ -20,6 +26,56 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     const getSenderFull = (loggedUser, users) => {
         if (!users || users.length < 2) return;
         return users[0]._id === loggedUser._id ? users[1] : users[0]
+    }
+
+    const sendMessage = async (event) => {
+        if (event.key === "Enter" && newMessage) {
+            try {
+                const config = {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user.token}`
+                    }
+                }
+                const { data } = await axios.post("/api/v1/messages", {
+                    content: newMessage,
+                    chatId: selectedChat._id
+                }, config)
+                console.log(data)
+                setNewMessage("")
+                setMessages([...messages, data])
+            } catch (error) {
+                toast.error("Cannot create", error)
+            }
+        }
+    }
+
+
+    useEffect(() => {
+        const fetchMessages = async () => {
+            if (!selectedChat) return;
+            try {
+                const config = {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`
+                    }
+                }
+                setLoading(true)
+                const { data } = await axios.get(`/api/v1/messages/${selectedChat._id}`, config)
+                console.log(data)
+                setMessages(data)
+                setLoading(false)
+            } catch (error) {
+                toast.error(error)
+            }
+        }
+        fetchMessages()
+    }, [selectedChat])
+
+
+    const typingHandler = (e) => {
+        setNewMessage(e.target.value);
+
     }
 
     return (
@@ -104,9 +160,58 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                             overflowY: "hidden",
                         }}
                     >
-                        <Typography color="text.secondary">
-                            Start chatting...
-                        </Typography>
+                        {loading ? (<span className="spinner"></span>) : (<div className='messages'>
+                            <ScrollableChat messages={messages} />
+                        </div>)}
+                    </Box>
+                    <Box
+
+                        component="form"
+                        onKeyDown={sendMessage}
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1,
+                            p: 1,
+                            backgroundColor: "#f5f5f5",
+                        }}>
+                        <TextField
+                            fullWidth
+                            placeholder="Enter a message.."
+                            variant="outlined"
+                            size="small"
+                            onChange={typingHandler}
+                            value={newMessage}
+                            sx={{
+                                "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "4px",
+
+                                    "& fieldset": {
+                                        borderColor: "#e0e0e0",
+                                    },
+
+                                    "&:hover fieldset": {
+                                        borderColor: "#d0d0d0",
+                                    },
+
+                                    "&.Mui-focused fieldset": {
+                                        borderColor: "#1976d2",
+                                    },
+                                },
+
+                                "& input": {
+                                    py: 1,
+                                    px: 1,
+                                    fontSize: "14px",
+                                },
+
+                                "& input::placeholder": {
+                                    color: "#b0b0b0",
+                                    opacity: 1,
+                                },
+                            }}
+                        />
                     </Box>
                 </Box>
             ) : (

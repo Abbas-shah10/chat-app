@@ -34,7 +34,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
 
 
 
-    const handleRemove = (userId) => {
+    const handleRemoveUser = (userId) => {
         setSelectedChat({ ...selectedChat, users: selectedChat.users?.filter((u) => u._id !== userId) })
     }
 
@@ -111,6 +111,25 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
         }
     }
 
+    const handleRemove = async (user1) => {
+        if (selectedChat.groupAdmin._id !== user._id && user1._id !== user._id) {
+            toast.error("Only admin can remove someone")
+        }
+
+        try {
+            const { data } = await axios.put("/api/v1/chats/group-remove", {
+                chatId: selectedChat._id,
+                userId: user1._id
+            })
+
+            user1._id === user._id ? setSelectedChat() : setSelectedChat(data)
+            setFetchAgain(!fetchAgain)
+            setLoading(false)
+        } catch (error) {
+            toast.error("Error Occurred", error)
+        }
+    }
+
 
     return (
         <div>
@@ -142,7 +161,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
                             <Chip
                                 key={user?._id}
                                 label={user?.name}
-                                onDelete={() => handleRemove(user._id)}
+                                onDelete={() => handleRemoveUser(user._id)}
                                 sx={{ marginRight: '3px' }}
                             />
                         ))}
