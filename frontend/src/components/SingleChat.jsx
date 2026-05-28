@@ -151,8 +151,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                         sx={{
                             flex: 1,
                             display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
+                            justifyContent: "flex-end",
+                            padding: 3,
                             flexDirection: "column",
                             width: "100%",
                             height: "100%",
