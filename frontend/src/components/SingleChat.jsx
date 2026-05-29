@@ -8,7 +8,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import ScrollableChat from "./ScrollableChat";
 import io from 'socket.io-client'
-import { Lottie } from "lottie-react";
+import Lottie from "lottie-react";
 import rawAnimation from "../animation/typing.json";
 
 const ENDPOINT = "http://localhost:8000";
