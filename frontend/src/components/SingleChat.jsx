@@ -24,15 +24,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     const [typing, setTyping] = useState(false)
     const [isTyping, setIsTyping] = useState(false)
 
-    const defaultOptions = {
-        loop: true,
-        autoplay: true,
-        animationData: animationData,
-        renderSettings: {
-            preserveAspectRatio: 'xMidYMid slice'
-        }
-    }
-
     const { selectedChat, user, setSelectedChat } = useContext(ChatContext);
 
     useEffect(() => {
@@ -239,8 +230,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                         {isTyping && (
                             <div style={{ width: 300, margin: 'auto' }}>
                                 <Lottie
-                                    options={defaultOptions}
-                                    width={75}
+                                    animationData={animationData}
+                                    loop={true}
+                                    autoplay={true}
+                                    style={{ width: 75, height: 75 }}
                                 />
                             </div>)}
                         <TextField
