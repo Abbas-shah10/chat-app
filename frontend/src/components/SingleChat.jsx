@@ -14,7 +14,9 @@ import rawAnimation from "../animation/typing.json";
 const ENDPOINT = "http://localhost:8000";
 let socket, selectedChatCompare;
 
+
 const typingAnimation = rawAnimation.default ? rawAnimation.default : rawAnimation;
+
 
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
@@ -221,8 +223,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                         </div>)}
                     </Box>
                     <Box
-
-                        component="form"
                         onKeyDown={sendMessage}
                         sx={{
                             display: "flex",
@@ -231,13 +231,14 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                             p: 1,
                             backgroundColor: "#f5f5f5",
                         }}>
-                        {isTyping ? (<div style={{ width: 300, margin: 'auto' }}>
-                            <Lottie
-                                animationData={typingAnimation}
-                                loop
-                                autoplay
-                            />
-                        </div>) : <></>}
+                        {isTyping && (
+                            <div style={{ width: 300, margin: 'auto' }}>
+                                <Lottie
+                                    animationData={typingAnimation}
+                                    loop
+                                    autoplay
+                                />
+                            </div>)}
                         <TextField
                             fullWidth
                             placeholder="Enter a message.."

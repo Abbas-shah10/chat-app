@@ -114,6 +114,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
     const handleRemove = async (user1) => {
         if (selectedChat.groupAdmin._id !== user._id && user1._id !== user._id) {
             toast.error("Only admin can remove someone")
+            return;
         }
 
         try {
@@ -223,7 +224,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
                             </List>
                         )}
                     </Box>
-                    <Button sx={{ marginTop: '4px', float: 'right' }} variant='contained' color='red' onClick={() => handleRemove(user)}>Leave Group</Button>
+                    <Button sx={{ marginTop: '4px', float: 'right' }} variant='contained' color='error' onClick={() => handleRemove(user)}>Leave Group</Button>
                 </Box>
 
 
