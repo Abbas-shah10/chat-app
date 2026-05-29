@@ -9,13 +9,10 @@ import { toast } from "react-toastify";
 import ScrollableChat from "./ScrollableChat";
 import io from 'socket.io-client'
 import Lottie from "lottie-react";
-import rawAnimation from "../animation/typing.json";
+import animationData from "../animation/typing.json";
 
 const ENDPOINT = "http://localhost:8000";
 let socket, selectedChatCompare;
-
-
-const typingAnimation = rawAnimation.default ? rawAnimation.default : rawAnimation;
 
 
 
@@ -27,6 +24,14 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     const [typing, setTyping] = useState(false)
     const [isTyping, setIsTyping] = useState(false)
 
+    const defaultOptions = {
+        loop: true,
+        autoplay: true,
+        animationData: animationData,
+        renderSettings: {
+            preserveAspectRatio: 'xMidYMid slice'
+        }
+    }
 
     const { selectedChat, user, setSelectedChat } = useContext(ChatContext);
 
@@ -234,9 +239,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                         {isTyping && (
                             <div style={{ width: 300, margin: 'auto' }}>
                                 <Lottie
-                                    animationData={typingAnimation}
-                                    loop
-                                    autoplay
+                                    options={defaultOptions}
+                                    width={75}
                                 />
                             </div>)}
                         <TextField
