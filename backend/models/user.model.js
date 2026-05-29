@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       default: "https://www.vecteezy.com/free-vector/anonymous-avatar",
     },
+    refreshToken: String,
     loggedOutAt: Date,
   },
   { timestamps: true },

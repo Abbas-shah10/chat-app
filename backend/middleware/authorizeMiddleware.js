@@ -28,7 +28,14 @@ const authorized = asyncHandler(async (req, res, next) => {
       req.user = user;
       next();
     } catch (error) {
-      res.status(401).json({ message: "Not authorized, token failed" });
+      if (error.name === "TokenExpiredError") {
+        return res.status(401).json({
+          message: "Access token expired",
+          code: "TOKEN_EXPIRED",
+        });
+      }
+
+      return res.status(401).json({ message: "Not authorized, token failed" });
     }
   }
 });

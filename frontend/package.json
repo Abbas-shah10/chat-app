@@ -22,7 +22,8 @@
     "react-router": "^7.15.0",
     "react-router-dom": "^7.15.0",
     "react-scrollable-feed": "^2.0.4",
-    "react-toastify": "^11.1.0"
+    "react-toastify": "^11.1.0",
+    "socket.io-client": "^4.8.3"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

@@ -7,8 +7,13 @@ import UpdateGroupChatModal from "./UpdateGroupChatModal";
 import axios from "axios";
 import { toast } from "react-toastify";
 import ScrollableChat from "./ScrollableChat";
+import io from 'socket.io-client'
+
+const ENDPOINT = "http://localhost:8000";
+let socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
+    const [socketConnected, setSocketConnected] = useState(false)
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
     const [newMessage, setNewMessage] = useState("")
@@ -65,6 +70,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 console.log(data)
                 setMessages(data)
                 setLoading(false)
+                socket.emit('join chat', selectedChat._id)
             } catch (error) {
                 toast.error(error)
             }
@@ -72,6 +78,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         fetchMessages()
     }, [selectedChat])
 
+
+    useEffect(() => {
+        socket = io(ENDPOINT)
+        socket.emit("setup", user)
+        socket.on("connection", () => setSocketConnected(true))
+
+    }, [])
 
     const typingHandler = (e) => {
         setNewMessage(e.target.value);
