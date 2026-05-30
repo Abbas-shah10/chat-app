@@ -29,10 +29,10 @@ app.use("/api/v1/messages", messageRoutes);
 // ----------- Deployment -----------------------
 const __dirname1 = path.resolve()
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname1, '/frontend/build')))
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve((__dirname1, 'frontend', "build", 'index.html')))
-  })
+  app.use(express.static(path.join(__dirname1, 'frontend', 'dist')));
+  app.get(/.*/, (req, res) => {
+    res.sendFile(path.join(__dirname1, 'frontend', 'dist', 'index.html'));
+  });
 
 } else {
   app.get('/', (req, res) => {
@@ -50,7 +50,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
   },
 });
 
