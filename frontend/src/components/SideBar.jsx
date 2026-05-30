@@ -1,20 +1,22 @@
 import { useId, useState } from "react";
 import {
   Box,
-  Tooltip,
   Button,
   InputBase,
   Menu,
   MenuItem,
   Avatar,
   Typography,
-  ListItem,
   Backdrop,
   Fade,
   List,
   ListItemButton,
   ListItemText,
   IconButton,
+  Divider,
+  Badge,
+  ClickAwayListener,
+  Paper,
 } from "@mui/material";
 import {
 
@@ -27,6 +29,7 @@ import ProfileModal from "./ProfileModal";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 
 
 
@@ -70,8 +73,9 @@ function SideBar() {
   const [loading, setLoading] = useState(false);
   const [chatLoading, setLoadingChat] = useState(null);
   const [openSearch, setOpenSearch] = useState(false);
+  const [openNotification, setOpenNotification] = useState(false);
 
-  const { user, setSelectedChat, chats, setChats } = useContext(ChatContext);
+  const { user, setSelectedChat, chats, setChats, notification, setNotification } = useContext(ChatContext);
 
 
   const handleSearch = async () => {
@@ -84,7 +88,6 @@ function SideBar() {
         }
       };
       const { data } = await axios.get(`/api/v1/users?search=${search}`, config);
-      console.log(data);
       setLoading(false);
       setSearchResult(data);
     } catch (e) {
@@ -138,6 +141,13 @@ function SideBar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+
+
+
+  const getSender = (loggedUser, users) => {
+    return users[0]._id === loggedUser._id ? users[1].name : users[0].name
+  }
 
 
   return (
@@ -208,8 +218,21 @@ function SideBar() {
                   Search
                 </Button>
 
-                <IconButton onClick={() => setOpenSearch(false)}>
-                  <FaTimes />
+                <IconButton
+                  onClick={() => setOpenSearch(true)}
+                  sx={{
+                    bgcolor: "#5865F2",
+                    color: "white",
+                    width: 48,
+                    height: 48,
+                    "&:hover": {
+                      bgcolor: "#4752C4",
+                      transform: "scale(1.05)",
+                    },
+                    transition: "all .2s ease",
+                  }}
+                >
+                  <FaSearch />
                 </IconButton>
               </Box>
 
@@ -279,9 +302,97 @@ function SideBar() {
           <FaSearch />
         </IconButton>
 
-        <h1 className="text-2xl text-black font-semibold">ChatApp</h1>
+        <Typography
+          variant="h5"
+          fontWeight={700}
+          sx={{
+            letterSpacing: 1,
+            color: "white",
+          }}
+        >
+          💬 ChatApp
+        </Typography>
 
-        <div>
+
+        <div className="flex items-center gap-3 relative">
+          <IconButton
+            sx={{
+              color: "white",
+              bgcolor: "#2f3136",
+              width: 42,
+              height: 42,
+              "&:hover": {
+                bgcolor: "#40444B",
+              },
+            }}
+            color="inherit"
+            onClick={() => setOpenNotification(!openNotification)}
+          >
+            <Badge badgeContent={notification.length} color="error">
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
+
+          {openNotification && (
+            <ClickAwayListener
+              onClickAway={() => setOpenNotification(false)}
+            >
+              <Paper
+                elevation={4}
+                sx={{
+                  position: "absolute",
+                  top: "120%",
+                  right: 0,
+                  width: 340,
+                  overflow: "hidden",
+                  borderRadius: 3,
+                  bgcolor: "#2B2D31",
+                  color: "white",
+                  border: "1px solid #40444B",
+                  zIndex: 9999,
+                }}
+              >
+                <Typography
+                  sx={{
+                    px: 2,
+                    py: 1.5,
+                    fontWeight: 700,
+                    bgcolor: "#1E1F22",
+                  }}
+                >
+                  Notifications
+                </Typography>
+
+                <Divider />
+
+                {notification.length > 0 ? (
+                  notification.map((notif) => (
+                    <MenuItem key={notif._id} onClick={() => {
+                      setSelectedChat(notif.chat);
+                      setNotification(notification.filter((n) => n !== notif));
+                    }}>
+                      {notif.chat.isGroupChat
+                        ? `New message in ${notif.chat.chatName}`
+                        : `New message from ${getSender(
+                          user,
+                          notif.chat.users
+                        )}`}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem disabled sx={{
+                    py: 1.5,
+                    "&:hover": {
+                      bgcolor: "#40444B",
+                    },
+                  }}>
+                    No new messages
+                  </MenuItem>
+                )}
+              </Paper>
+            </ClickAwayListener>
+          )}
+
           <Button
             id={buttonId}
             aria-controls={open ? menuId : undefined}
@@ -289,16 +400,50 @@ function SideBar() {
             aria-expanded={open}
             onClick={handleClick}
           >
-            <Avatar sx={{ mr: 2 }} src={user?.avatar}>
-              {user?.name?.charAt(0)}
-            </Avatar>
-            <FaChevronDown size={20} />
+            <Box sx={{ position: "relative", display: 'flex' }}>
+
+              <Avatar
+                src={user?.avatar}
+                sx={{
+                  width: 42,
+                  height: 42,
+                  bgcolor: "#5865F2",
+                  fontWeight: "bold",
+                  boxShadow: "0 0 0 3px #2f3136",
+                }}
+              >
+                {user?.name?.charAt(0)}
+                {/* <FaChevronDown size={20} /> */}
+              </Avatar>
+              <Box
+                sx={{
+                  position: "absolute",
+                  bottom: 2,
+                  right: 2,
+                  width: 12,
+                  height: 12,
+                  bgcolor: "#3BA55D",
+                  borderRadius: "50%",
+                  border: "2px solid #202225",
+                }}
+              />
+            </Box>
           </Button>
           <Menu
             id={menuId}
             anchorEl={anchorEl}
             open={open}
             onClose={handleClose}
+            PaperProps={{
+              sx: {
+                bgcolor: "#2B2D31",
+                color: "white",
+                borderRadius: 3,
+                mt: 1,
+                minWidth: 200,
+                border: "1px solid #40444B",
+              },
+            }}
             slotProps={{
               list: {
                 'aria-labelledby': buttonId,
@@ -306,7 +451,11 @@ function SideBar() {
             }}
           >
             <ProfileModal user={user}>
-              <MenuItem onClick={handleClick}>My Profile</MenuItem>
+              <MenuItem sx={{
+                "&:hover": {
+                  bgcolor: "#40444B",
+                },
+              }} onClick={handleClick}>My Profile</MenuItem>
             </ProfileModal>
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>

@@ -10,7 +10,7 @@ A chat app platform that lets users to chat and send messages with each other an
 - MongoDb
 - TailwindCSS
 - Material UI
-- Tailwind 
+- Tailwind
 
 ## <a name="features">🔋 Features</a>
 
@@ -20,19 +20,7 @@ A chat app platform that lets users to chat and send messages with each other an
 
 👉 **Creating Group Chats**: Implement group chat where admin/user can create, delete group chats.
 
-👉 **Profile View**: user can view thier profile username, email and avatar.
-
-
-
-
-
-
-
-
-
-
-
-
+👉 **Profile View**: user can view their profile username, email and avatar.
 
 <div align="center">
 
@@ -64,14 +52,15 @@ A modern, fast, and responsive real-time chat application built with cutting-edg
 
 ## 🛠️ Tech Stack
 
-| Technology | Purpose | Version |
-|-----------|---------|---------|
-| **React** | UI Framework | 18+ |
-| **Vite** | Build Tool & Dev Server | 5.0+ |
-| **JavaScript** | Primary Language | ES6+ |
-| **Oxc** | Fast JavaScript Parser | Latest |
+| Technology     | Purpose                 | Version |
+| -------------- | ----------------------- | ------- |
+| **React**      | UI Framework            | 18+     |
+| **Vite**       | Build Tool & Dev Server | 5.0+    |
+| **JavaScript** | Primary Language        | ES6+    |
+| **Oxc**        | Fast JavaScript Parser  | Latest  |
 
 **Language Composition:**
+
 - 📊 JavaScript: 98.6%
 - 📊 Other: 1.4%
 
@@ -82,6 +71,7 @@ A modern, fast, and responsive real-time chat application built with cutting-edg
 ### Prerequisites
 
 Before you begin, ensure you have the following installed:
+
 - Node.js (v16 or higher)
 - npm or yarn package manager
 - Git
@@ -92,3 +82,4 @@ Before you begin, ensure you have the following installed:
    ```bash
    git clone https://github.com/Abbas-shah10/chat-app.git
    cd chat-app
+   ```

@@ -24,7 +24,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     const [typing, setTyping] = useState(false)
     const [isTyping, setIsTyping] = useState(false)
 
-    const { selectedChat, user, setSelectedChat } = useContext(ChatContext);
+    const { selectedChat, user, setSelectedChat, notification, setNotification } = useContext(ChatContext);
+
 
     useEffect(() => {
         socket = io(ENDPOINT)
@@ -85,7 +86,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 }
                 setLoading(true)
                 const { data } = await axios.get(`/api/v1/messages/${selectedChat._id}`, config)
-                console.log(data)
                 setMessages(data)
                 setLoading(false)
                 socket.emit('join chat', selectedChat._id)
@@ -100,7 +100,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     useEffect(() => {
         socket.on('message received', (newMessagesReceived) => {
             if (!selectedChatCompare || selectedChatCompare._id !== newMessagesReceived.chat._id) {
-                // give notifications
+                if (!notification.includes(newMessagesReceived)) {
+                    setNotification([newMessagesReceived, ...notification])
+                    setFetchAgain(!fetchAgain)
+                }
             } else {
                 setMessages([...messages, newMessagesReceived])
             }
@@ -227,15 +230,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                             p: 1,
                             backgroundColor: "#f5f5f5",
                         }}>
-                        {isTyping && (
+                        {/* {isTyping && (
                             <div style={{ width: 300, margin: 'auto' }}>
-                                <Lottie
-                                    animationData={animationData}
-                                    loop={true}
-                                    autoplay={true}
-                                    style={{ width: 75, height: 75 }}
-                                />
-                            </div>)}
+                                ""
+                            </div>)} */}
                         <TextField
                             fullWidth
                             placeholder="Enter a message.."
