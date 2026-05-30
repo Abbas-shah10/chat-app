@@ -307,7 +307,6 @@ function SideBar() {
           fontWeight={700}
           sx={{
             letterSpacing: 1,
-            color: "white",
           }}
         >
           💬 ChatApp
