@@ -2,6 +2,7 @@ import express, { urlencoded } from "express";
 import { Server } from "socket.io";
 import http from "http";
 import dotenv from "dotenv";
+import path from 'path'
 
 // Utils
 import connectDb from "../db/db.js";
@@ -19,9 +20,30 @@ const app = express();
 app.use(express.json());
 app.use(urlencoded({ extended: true }));
 
+
+
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/chats", chatRoutes);
 app.use("/api/v1/messages", messageRoutes);
+
+// ----------- Deployment -----------------------
+const __dirname1 = path.resolve()
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname1, '/frontend/build')))
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve((__dirname1, 'frontend', "build", 'index.html')))
+  })
+
+} else {
+  app.get('/', (req, res) => {
+    res.send("API is running successfully")
+  })
+}
+
+// ----------- Deployment -----------------------
+
+
+
 
 const server = http.createServer(app);
 
