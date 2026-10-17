@@ -76,6 +76,4 @@ Before you begin, ensure you have the following installed:
 - npm or yarn package manager
 - Git
 
-### Installation
-
 
