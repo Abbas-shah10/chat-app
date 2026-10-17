@@ -78,8 +78,4 @@ Before you begin, ensure you have the following installed:
 
 ### Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/Abbas-shah10/chat-app.git
-   cd chat-app
-   ```
+
