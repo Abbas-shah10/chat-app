@@ -75,5 +75,3 @@ Before you begin, ensure you have the following installed:
 - Node.js (v16 or higher)
 - npm or yarn package manager
 - Git
-
-
