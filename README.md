@@ -188,17 +188,3 @@ npm test
 # or
 yarn test
 ```
-
-(Adjust according to the actual test scripts present in package.json.)
-
----
-
-## 📝 Contributing
-
-Contributions are welcome! Please open an issue or submit a pull request with improvements.
-
----
-
-## 📄 License
-
-This project is open source. (Specify your license here.)
