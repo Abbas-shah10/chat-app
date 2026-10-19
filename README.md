@@ -174,17 +174,3 @@ MONGO_URI=
 JWT_SECRET=
 VITE_API_URL=
 ```
-
-Copy this file to `.env` and fill in the values.
-
----
-
-## 🧪 Testing
-
-If the project includes tests, run them with:
-
-```bash
-npm test
-# or
-yarn test
-```
