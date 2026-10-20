@@ -157,15 +157,6 @@ npm run build
 # or
 yarn build
 ```
-
-Then serve the build with a static server or configure your backend to serve the `dist/` folder.
-
-6. Optional — Docker
-
-If you prefer Docker, add a `Dockerfile` and `docker-compose.yml` (not included in this repo by default). Example compose to run frontend + backend + MongoDB is beyond the scope of this README but recommended for production-like setups.
-
----
-
 ## ⚙️ Environment Example (.env.example)
 
 ```
